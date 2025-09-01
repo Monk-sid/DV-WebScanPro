@@ -2,6 +2,9 @@ import time
 import copy
 from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
 from utils import get_session, find_sql_errors
+import requests
+from bs4 import BeautifulSoup
+from crawler import Crawler 
 
 
 class SQLiScanner:
@@ -16,8 +19,39 @@ class SQLiScanner:
             "' OR '1'='1",
             "' OR 1=1--",
             "\" OR \"1\"=\"1",
-            "'; DROP TABLE users; --"  # ⚠️ destructive, only for DVWA/JuiceShop labs
+            "'; DROP TABLE users; --"  # 
         ]
+
+    
+    def crawl(self):
+
+        urls = [self.target]
+        forms_by_url = {}
+
+        try:
+            response = requests.get(self.target)
+            soup = BeautifulSoup(response.text, "html.parser")
+            forms = soup.find_all("form")
+            form_list = []
+            for form in forms:
+                inputs = {}
+                for inp in form.find_all("input"):
+                    name = inp.get("name")
+                    value = inp.get("value")
+                    if name:
+                        inputs[name] = value
+                form_data = {
+                      "action": form.get("action"),
+                    "method": form.get("method", "get"),
+                    "inputs": inputs
+                }
+                form_list.append(form_data)
+            forms_by_url[self.target] = form_list
+        except Exception as e:
+            print(f"[!] Crawling failed: {e}")
+
+        return urls, forms_by_url
+    
 
     def test_url_params(self, url):
         """Test query parameters for SQL injection."""
@@ -97,20 +131,16 @@ class SQLiScanner:
         self.test_forms(form_dict)
         return self.findings
 
-if __name__ == "__main__":
-    # Example only — replace with crawler results
-    urls = ["http://localhost/dvwa/vulnerabilities/sqli/?id=1&Submit=Submit"]
-    forms_by_url = {
-        "http://localhost/dvwa/vulnerabilities/sqli/": [
-            {
-                "action": "http://localhost/dvwa/vulnerabilities/sqli/",
-                "method": "post",
-                "inputs": {"id": "", "Submit": "Submit"}
-            }
-        ]
-    }
 
-    scanner = SQLiScanner("http://localhost:8080/")
+if __name__ == "__main__":
+    target = "http://localhost:8080/"
+    crawler = Crawler(target, max_pages=50)
+    crawler.crawl()  # crawls and populates crawler.visited and crawler.forms
+
+    urls = list(crawler.visited)         # get all discovered page URLs
+    forms_by_url = crawler.forms         # get all discovered forms by URL
+
+    scanner = SQLiScanner(target)
     results = scanner.run(urls, forms_by_url)
 
     for finding in results:

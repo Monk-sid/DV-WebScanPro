@@ -4,6 +4,7 @@ from urllib.parse import urldefrag
 from utils import get_session, extract_links, extract_forms, normalize_url, is_same_domain
 from tqdm import tqdm
 
+
 class Crawler:
     def __init__(self, base_url, max_pages=200, delay=0.2, session=None):
         # Normalize base_url safely as string and strip trailing slash
