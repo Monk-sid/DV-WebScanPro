@@ -2,11 +2,12 @@ import requests
 from urllib.parse import urlparse, urljoin
 from bs4 import BeautifulSoup
 
+
 def get_session():
     """Returns a requests.Session with common headers."""
     session = requests.Session()
     session.headers.update({
-        "User-Agent": "Mozilla/5.0 (compatible; DVWA-Crawler/1.0; +http://localhost/DVWA/)"
+        "User-Agent": "Mozilla/5.0 (compatible; Crawler/1.0; +http://localhost/DVWA/)"
     })
     return session
 
@@ -57,3 +58,17 @@ def is_same_domain(base, url):
     base_parsed = urlparse(base)
     url_parsed = urlparse(url)
     return base_parsed.netloc.lower() == url_parsed.netloc.lower()
+
+def find_sql_errors(html):
+    """Check response text for common SQL error messages."""
+    errors = [
+        "you have an error in your sql syntax;",
+        "warning: mysql",
+        "unclosed quotation mark after the character string",
+        "quoted string not properly terminated",
+        "sqlstate"
+    ]
+    for err in errors:
+        if err.lower() in html.lower():
+            return True, err
+    return False, None
