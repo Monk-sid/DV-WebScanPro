@@ -55,7 +55,7 @@ class Crawler:
         pbar.close()
 
 if __name__ == "__main__":
-    start_url = "http://localhost/DVWA/"
+    start_url = "http://localhost:8080/"
     crawler = Crawler(start_url, max_pages=50, delay=0.5)
     crawler.crawl()
     print("\nVisited Pages:")
