@@ -152,7 +152,7 @@ async function runScan(urls) {
 }
 
 // Example usage:
-const targetUrls = ['http://localhost:8080/vulnerabilities/reflected/?q=test'];
+const targetUrls = ['http://localhost:8080/'];
 
 runScan(targetUrls).then(findings => {
   console.log('Scan completed. Findings:', findings);
