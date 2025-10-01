@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Vulnerability Report</title>
+</head>
+<body>
+    <h1>Vulnerability Scan Report</h1>
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>Type</th>
+            <th>Endpoint</th>
+            <th>Severity</th>
+            <th>Mitigation</th>
+        </tr>
+        {% for row in data %}
+        <tr>
+            <td>{{row['type']}}</td>
+            <td>{{row['endpoint']}}</td>
+            <td>{{row['severity']}}</td>
+            <td>{{row['mitigation']}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
