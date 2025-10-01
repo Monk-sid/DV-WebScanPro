@@ -1,7 +1,7 @@
 import time
 import sys
 from urllib.parse import urldefrag
-from utils import get_session, extract_links, extract_forms, normalize_url, is_same_domain
+from scanner_utils import get_session, extract_links, extract_forms, normalize_url, is_same_domain
 from tqdm import tqdm
 
 
@@ -54,10 +54,3 @@ class Crawler:
             time.sleep(self.delay)
         pbar.close()
 
-if __name__ == "__main__":
-    start_url = "http://localhost:8080/"
-    crawler = Crawler(start_url, max_pages=50, delay=0.5)
-    crawler.crawl()
-    print("\nVisited Pages:")
-    for url in crawler.visited:
-        print(url)

@@ -226,13 +226,3 @@ def run_scan(urls):
 
     return all_findings
 
-
-# --- Example usage ---
-if __name__ == '__main__':
-    # target list - edit as needed
-    target_urls = ['http://localhost:8080/']
-
-    findings = run_scan(target_urls)
-    print('Scan completed. Findings:')
-    for f in findings:
-        print(f)

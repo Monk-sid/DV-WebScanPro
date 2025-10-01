@@ -1,7 +1,7 @@
 import time
 import copy
 from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
-from utils import get_session, find_sql_errors
+from scanner_utils import get_session, find_sql_errors
 import requests
 from bs4 import BeautifulSoup
 from crawler import Crawler 
@@ -130,18 +130,3 @@ class SQLiScanner:
 
         self.test_forms(form_dict)
         return self.findings
-
-
-if __name__ == "__main__":
-    target = "http://localhost:8080/"
-    crawler = Crawler(target, max_pages=50)
-    crawler.crawl()  # crawls and populates crawler.visited and crawler.forms
-
-    urls = list(crawler.visited)         # get all discovered page URLs
-    forms_by_url = crawler.forms         # get all discovered forms by URL
-
-    scanner = SQLiScanner(target)
-    results = scanner.run(urls, forms_by_url)
-
-    for finding in results:
-        print(f"[+] Found {finding['type']} vulnerability:", finding)

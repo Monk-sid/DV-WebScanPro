@@ -54,9 +54,3 @@ def test_profile_access(session):
     else:
         print("Profile access failed.")
 
-if __name__ == "__main__":
-    session = requests.Session()
-    cookies = dvwa_login(session, "admin", "password", SECURITY_LEVEL)
-    check_cookie_flags(session)
-    test_session_fixation(session, "admin", "password", SECURITY_LEVEL)
-    test_profile_access(session)

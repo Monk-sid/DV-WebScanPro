@@ -71,5 +71,4 @@ def main():
 
         time.sleep(0.3)  # Throttle between user tests
 
-if __name__ == "__main__":
-    main()
+
